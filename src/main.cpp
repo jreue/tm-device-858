@@ -33,6 +33,8 @@ Button* device108Switch = nullptr;
 bool device108LastState = false;
 
 void setupButtons();
+void handleButton1Pressed(void* button_handle, void* usr_data);
+void handleButton2Pressed(void* button_handle, void* usr_data);
 void handleDevice101SwitchChanged(void* button_handle, void* usr_data);
 void handleDevice102SwitchChanged(void* button_handle, void* usr_data);
 void handleDevice103SwitchChanged(void* button_handle, void* usr_data);
@@ -55,6 +57,12 @@ void loop() {
 }
 
 void setupButtons() {
+  Button* button1 = new Button(BUTTON_1_PIN, false);
+  button1->attachSingleClickEventCb(&handleButton1Pressed, NULL);
+
+  Button* button2 = new Button(BUTTON_2_PIN, false);
+  button2->attachSingleClickEventCb(&handleButton2Pressed, NULL);
+
   device101Switch = new Button(SWITCH_101_PIN, false);
   device101LastState = (digitalRead(SWITCH_101_PIN) == LOW);
   device101Switch->attachPressDownEventCb(handleDevice101SwitchChanged, nullptr);
@@ -94,6 +102,14 @@ void setupButtons() {
   device108LastState = (digitalRead(SWITCH_108_PIN) == LOW);
   device108Switch->attachPressDownEventCb(handleDevice108SwitchChanged, nullptr);
   device108Switch->attachPressUpEventCb(handleDevice108SwitchChanged, nullptr);
+}
+
+void handleButton1Pressed(void* button_handle, void* usr_data) {
+  espNowHelper.sendTravelOverride(hubAddress, DEVICE_ID);
+}
+
+void handleButton2Pressed(void* button_handle, void* usr_data) {
+  Serial.println("Button 2 pressed");
 }
 
 void handleDevice101SwitchChanged(void* button_handle, void* usr_data) {
