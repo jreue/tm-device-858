@@ -109,7 +109,7 @@ void handleButton1Pressed(void* button_handle, void* usr_data) {
 }
 
 void handleButton2Pressed(void* button_handle, void* usr_data) {
-  Serial.println("Button 2 pressed");
+  espNowHelper.sendResetOverride(hubAddress, DEVICE_ID);
 }
 
 void handleDevice101SwitchChanged(void* button_handle, void* usr_data) {
